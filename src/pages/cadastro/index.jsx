@@ -1,39 +1,28 @@
 import { useNavigate  } from "react-router-dom";
 import { MdEmail, MdLock } from 'react-icons/md'
+import {BsPersonFill} from 'react-icons/bs';
 import { Button } from '../../components/Button';
 import { Header } from '../../components/Header';
 import { Input } from '../../components/Input';
-import { api } from '../../services/api';
+//import { api } from '../../services/api';
 
 import { useForm } from "react-hook-form";
 
 
-import { Container, Title, Column, TitleLogin, SubtitleLogin, EsqueciText, CriarText, Row, Wrapper } from './styles';
+import { Container, Title, Column, TitleCadastro, SubtitleCadastro, JaTemLogin, AoClicarEm, CriarText, Row, Wrapper } from './styles';
 
-const Login = () => {
+const Cadastro = () => {
 
     const navigate = useNavigate()
 
-    const { control, handleSubmit, formState: { errors  } } = useForm({
+    const { control, formState: { errors  } } = useForm({
         reValidateMode: 'onChange',
         mode: 'onChange',
-    });
+    }); 
 
-    const onSubmit = async (formData) => {
-        try{
-            const {data} = await api.get(`/users?email=${formData.email}&senha=${formData.senha}`);
-            
-            if(data.length && data[0].id){
-                navigate('/feed') 
-                return
-            }
-
-            alert('Usuário ou senha inválido')
-        }catch(e){
-            //TODO: HOUVE UM ERRO
-        }
-    };
-
+    const handleClickSignIn = () => {
+        navigate('/login')
+    }
     console.log('errors', errors);
 
     return (<>
@@ -45,18 +34,20 @@ const Login = () => {
             </Column>
             <Column>
                 <Wrapper>
-                <TitleLogin>Faça seu login</TitleLogin>
-                <SubtitleLogin>Faça seu login e make the change._</SubtitleLogin>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <TitleCadastro>Comece agora grátis</TitleCadastro>
+                <SubtitleCadastro>Crie sua conta e make the change._</SubtitleCadastro>
+                <form>
+                    <Input placeholder= "Nome" leftIcon={<BsPersonFill />} name="nome" control={control} />
                     <Input placeholder="E-mail" leftIcon={<MdEmail />} name="email"  control={control} />
                     {errors.email && <span>E-mail é obrigatório</span>}
                     <Input type="password" placeholder="Senha" leftIcon={<MdLock />}  name="senha" control={control} />
                     {errors.senha && <span>Senha é obrigatório</span>}
-                    <Button title="Entrar" variant="secondary" type="submit"/>
+                    <Button title="Criar minha conta" variant="secondary" type="submit" onClick={handleClickSignIn}/>
                 </form>
+                <AoClicarEm>Ao clicar em "criar minha conta grátis", declaro que aceito as Políticas de Privacidade e os Termos de Uso da DIO.</AoClicarEm>
                 <Row>
-                    <EsqueciText>Esqueci minha senha</EsqueciText>
-                    <CriarText>Criar Conta</CriarText>
+                    <JaTemLogin>Já tenho conta.</JaTemLogin>
+                    <CriarText onClick={handleClickSignIn}>Fazer Login.</CriarText>
                 </Row>
                 </Wrapper>
             </Column>
@@ -64,4 +55,4 @@ const Login = () => {
     </>)
 }
 
-export { Login }
+export { Cadastro }
